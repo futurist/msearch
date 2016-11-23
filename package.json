@@ -1,0 +1,32 @@
+{
+  "name": "msearch",
+  "version": "1.0.0",
+  "description": "Input search box using mithril",
+  "main": "dist/msearch.cjs.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/futurist/msearch.git"
+  },
+  "keywords": [
+    "mithril",
+    "input",
+    "search",
+    "clear"
+  ],
+  "author": "James Yang <jamesyang999@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/futurist/msearch/issues"
+  },
+  "homepage": "https://github.com/futurist/msearch#readme",
+  "dependencies": {
+    "cssobj": "^0.7.3",
+    "cssobj-mithril": "^2.0.0",
+    "cssobj-plugin-default-unit": "^2.2.0",
+    "mithril": "^0.2.5",
+    "objutil": "^2.0.5"
+  }
+}
