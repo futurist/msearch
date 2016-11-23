@@ -3502,13 +3502,14 @@ var m$1 = cssobjMithril_cjs$1(mithril$1)(cssobj_cjs$1(
   }
 ));
 
+var clearChar = '×';
+
 var mSearch = {
   controller: function controller(options) {
     var arguments$1 = arguments;
 
     var ctrl = this;
     ctrl.options = options = objutil_cjs.defaults(options, {
-      clearChar: '×',
       outer: {},
       input: {},
       clear: {
@@ -3540,21 +3541,22 @@ var mSearch = {
       options.outer,
       [
         m$1('input', options.input),
-        m$1('a.clear[href=javascript:;]', options.clear, options.clearChar)
+        m$1('a.clear[href=javascript:;]', options.clear, options.clearChar || clearChar)
       ]
     )
   }
 };
 
-mSearch.css = function (obj) {
+mSearch.config = function (obj, char) {
   m$1.result.update(objutil_cjs.merge(css, obj));
+  clearChar = char;
 };
 
-mSearch.css({
+mSearch.config({
   '.clear':{
     width: '25px'
   }
-});
+}, 'x');
 
 mithril$1.mount(test, mithril$1(mSearch, {
   outer: {
@@ -3568,7 +3570,6 @@ mithril$1.mount(test, mithril$1(mSearch, {
   clear: {
     style: {height: '10px'}
   },
-  clearChar: 'x',
   onclear: function (v){ return console.log('content cleared'); }
 }));
 
@@ -3581,6 +3582,7 @@ mithril$1.mount(test2, mithril$1(mSearch, {
       console.log(222, this.value);
     }
   },
+  clearChar: 'xx',
   onclear: function (v){ return console.log('content 222 cleared'); }
 }));
 

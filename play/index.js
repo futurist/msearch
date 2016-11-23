@@ -1,11 +1,11 @@
 import m from 'mithril'
 import msearch from '../src'
 
-msearch.css({
+msearch.config({
   '.clear':{
     width: '25px'
   }
-})
+}, 'x')
 
 m.mount(test, m(msearch, {
   outer: {
@@ -19,7 +19,6 @@ m.mount(test, m(msearch, {
   clear: {
     style: {height: '10px'}
   },
-  clearChar: 'x',
   onclear: v=> console.log('content cleared')
 }))
 
@@ -32,5 +31,6 @@ m.mount(test2, m(msearch, {
       console.log(222, this.value)
     }
   },
+  clearChar: 'xx',
   onclear: v=> console.log('content 222 cleared')
 }))

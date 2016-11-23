@@ -33,11 +33,12 @@ const m = cssobj_mithril(mithril)(cssobj(
   }
 ))
 
+let clearChar = '×'
+
 const mSearch = {
   controller(options) {
     const ctrl = this
     ctrl.options = options = objutil.defaults(options, {
-      clearChar: '×',
       outer: {},
       input: {},
       clear: {
@@ -69,14 +70,15 @@ const mSearch = {
       options.outer,
       [
         m('input', options.input),
-        m('a.clear[href=javascript:;]', options.clear, options.clearChar)
+        m('a.clear[href=javascript:;]', options.clear, options.clearChar || clearChar)
       ]
     )
   }
 }
 
-mSearch.css = obj => {
+mSearch.config = (obj, char) => {
   m.result.update(objutil.merge(css, obj))
+  clearChar = char
 }
 
 export default mSearch
