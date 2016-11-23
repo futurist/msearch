@@ -3522,15 +3522,16 @@ var mSearch = {
         }
       }
     });
+
+    m$1.result.update(objutil_cjs.merge(css, options.css));
+
     var oldConfig = options.input.config;
     options.input.config = function (el, old, ctx, node) {
       if(old) { return }
+      var clear = el.nextSibling;
+      el.style.paddingRight = clear.offsetWidth+'px';
       if(typeof oldConfig=='function') {
         oldConfig.apply(node, arguments$1);
-      }
-      var style = el.nextSibling.style;
-      if('width' in style) {
-        el.style.paddingRight = style.width;
       }
     };
   },
@@ -3548,12 +3549,21 @@ var mSearch = {
 };
 
 mithril$1.mount(test, mithril$1(mSearch, {
+  css:{
+    '.clear':{
+      width: '25px'
+    }
+  },
   outer: {
-    config: function (e, old, context, node) {console.log(this ,node);},
     style: {width: '100px'}
   },
+  input: {
+    oninput: function (e) {
+      console.log(this.value);
+    }
+  },
   clear: {
-    style: {width: '10px'}
+    style: {height: '10px'}
   },
   clearChar: 'x',
   onclear: function (v){ return console.log('content cleared'); }

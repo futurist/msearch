@@ -51,15 +51,16 @@ const mSearch = {
         }
       }
     })
+
+    m.result.update(objutil.merge(css, options.css))
+
     const oldConfig = options.input.config
     options.input.config = (el, old, ctx, node) => {
       if(old) return
+      const clear = el.nextSibling
+      el.style.paddingRight = clear.offsetWidth+'px'
       if(typeof oldConfig=='function') {
         oldConfig.apply(node, arguments)
-      }
-      const style = el.nextSibling.style
-      if('width' in style) {
-        el.style.paddingRight = style.width
       }
     }
   },
