@@ -52,8 +52,6 @@ const mSearch = {
       }
     })
 
-    m.result.update(objutil.merge(css, options.css))
-
     const oldConfig = options.input.config
     options.input.config = (el, old, ctx, node) => {
       if(old) return
@@ -75,6 +73,10 @@ const mSearch = {
       ]
     )
   }
+}
+
+mSearch.css = obj => {
+  m.result.update(objutil.merge(css, obj))
 }
 
 export default mSearch

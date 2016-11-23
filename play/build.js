@@ -3523,8 +3523,6 @@ var mSearch = {
       }
     });
 
-    m$1.result.update(objutil_cjs.merge(css, options.css));
-
     var oldConfig = options.input.config;
     options.input.config = function (el, old, ctx, node) {
       if(old) { return }
@@ -3548,12 +3546,17 @@ var mSearch = {
   }
 };
 
+mSearch.css = function (obj) {
+  m$1.result.update(objutil_cjs.merge(css, obj));
+};
+
+mSearch.css({
+  '.clear':{
+    width: '25px'
+  }
+});
+
 mithril$1.mount(test, mithril$1(mSearch, {
-  css:{
-    '.clear':{
-      width: '25px'
-    }
-  },
   outer: {
     style: {width: '100px'}
   },
@@ -3567,6 +3570,18 @@ mithril$1.mount(test, mithril$1(mSearch, {
   },
   clearChar: 'x',
   onclear: function (v){ return console.log('content cleared'); }
+}));
+
+mithril$1.mount(test2, mithril$1(mSearch, {
+  outer: {
+    style: {width: '200px'}
+  },
+  input: {
+    oninput: function (e) {
+      console.log(222, this.value);
+    }
+  },
+  onclear: function (v){ return console.log('content 222 cleared'); }
 }));
 
 }());
