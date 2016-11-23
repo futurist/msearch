@@ -1,22 +1,20 @@
 import mithril from 'mithril'
 import cssobj_mithril from 'cssobj-mithril'
 import cssobj from 'cssobj'
-import defaultUnit from 'cssobj-plugin-default-unit'
 import objutil from 'objutil'
 
 const css = {
   '.input': {
-    border: '1px solid red',
     position: 'relative',
-    width: 100,
     input: {
       boxSizing: 'border-box',
-      width: 60
+      width: '100%',
+      paddingRight: '15px'
     }
   },
-  '.clear, .confirm': {
+  '.clear': {
     position: 'absolute',
-    width: 20,
+    width: '15px',
     top: 0,
     right: 0,
     color: 'gray',
@@ -25,37 +23,56 @@ const css = {
     '&:hover':{
       color: 'black'
     }
-  },
-  '.clear': {
-    right: 20
   }
 }
 
 const m = cssobj_mithril(mithril)(cssobj(
   css,
   {
-    local: true,
-    plugins: [
-      defaultUnit()
-    ]
+    local: true
   }
 ))
 
 const mSearch = {
   controller(options) {
     const ctrl = this
-    ctrl.options = objutil.defaults(options, {
-      hasClear: true,
-      hasConfirm: true
+    ctrl.options = options = objutil.defaults(options, {
+      clearChar: '×',
+      outer: {},
+      input: {},
+      clear: {
+        onclick: e => {
+          const input = e.target.previousSibling
+          input.value = ''
+          input.focus()
+          if(typeof options.onclear=='function'){
+            options.onclear(e)
+          }
+        }
+      }
     })
+    const oldConfig = options.input.config
+    options.input.config = (el, old, ctx, node) => {
+      if(old) return
+      if(typeof oldConfig=='function') {
+        oldConfig.apply(node, arguments)
+      }
+      const style = el.nextSibling.style
+      if('width' in style) {
+        el.style.paddingRight = style.width
+      }
+    }
   },
   view(ctrl) {
     const options = ctrl.options
-    return m('.input', [
-      m('input'),
-      options.hasClear ? m('a.clear[href=javascript:;]', '×') : [],
-      options.hasConfirm ? m('a.confirm[href=javascript:;]', '✓') : []
-    ])
+    return m(
+      '.input',
+      options.outer,
+      [
+        m('input', options.input),
+        m('a.clear[href=javascript:;]', options.clear, options.clearChar)
+      ]
+    )
   }
 }
 

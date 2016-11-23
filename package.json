@@ -25,7 +25,6 @@
   "dependencies": {
     "cssobj": "^0.7.3",
     "cssobj-mithril": "^2.0.0",
-    "cssobj-plugin-default-unit": "^2.2.0",
     "mithril": "^0.2.5",
     "objutil": "^2.0.5"
   }

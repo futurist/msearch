@@ -11,7 +11,7 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var mithril = createCommonjsModule(function (module) {
+var mithril$1 = createCommonjsModule(function (module) {
 (function (global, factory) { // eslint-disable-line
 	"use strict";
 	/* eslint-disable no-undef */
@@ -2253,6 +2253,12 @@ var mithril = createCommonjsModule(function (module) {
 }); // eslint-disable-line
 });
 
+/* global m */
+
+
+/* Removed from v2.0.0, pass M or use global m */
+// import m from 'mithril'
+
 var type = {}.toString;
 
 function isObject(object) {
@@ -2328,6 +2334,9 @@ var cssobjMithril_cjs$1 = bindM;
     fcb1546c1ba81821bed252880079f04cea1a6cfe
 */
 
+// helper functions for cssobj
+
+// check n is numeric, or string of numeric
 function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n)
 }
@@ -3339,91 +3348,9 @@ cssobj.version = '0.7.3';
 
 var cssobj_cjs$1 = cssobj;
 
-function dashify$1(str) {
-  return str.replace(/[A-Z]/g, function(m) {
-    return '-' + m.toLowerCase()
-  })
-}
-
-// capitalize str
-
-
-// repeat str for num times
-
-
-// random string, should used across all cssobj plugins
-var random$1 = (function () {
-  var count = 0;
-  return function (prefix) {
-    count++;
-    return '_' + (prefix||'') + Math.floor(Math.random() * Math.pow(2, 32)).toString(36) + count + '_'
-  }
-})();
-
-// extend obj from source, if it's no key in obj, create one
-
-
-// ensure obj[k] as array, then push v into it
-var unitless = [
-  "animation-iteration-count",
-  "box-flex",
-  "box-flex-group",
-  "box-ordinal-group",
-  "columns",
-  "column-count",
-  "fill-opacity",
-  "flex",
-  "flex-grow",
-  "flex-positive",
-  "flex-negative",
-  "flex-order",
-  "flex-shrink",
-  "font-weight",
-  // "line-height",  /* alway add unit unless it's not number */
-  "line-clamp",
-  "opacity",
-  "order",
-  "orphans",
-  "stop-opacity",
-  "stroke-dash-offset",
-  "stroke-opacity",
-  "stroke-width",
-  "tab-size",
-  "widows",
-  "z-index",
-  "zoom"
-];
-
-
-function cssobj_plugin_default_unit (unit) {
-
-  unit = unit || 'px';
-
-  return {
-    value: function(value, key, node, result) {
-
-      var base = dashify$1(key).replace(
-          /^[^a-zA-Z]*(?:ms-|o-|webkit-|moz-|khtml-)?|[^a-zA-Z]+$/g,
-        '');
-
-      // here **ignored** value===''||value===null,
-      // which is false for isNaN.
-      // cssobj never have this value
-      return (!value || typeof value !== 'number'
-              || unitless.indexOf(base)>-1
-             )
-        ? value
-        : value + unit
-
-    }
-  }
-
-}
-
-var cssobjPluginDefaultUnit_cjs$1 = cssobj_plugin_default_unit;
-
+// better type check
 var is = function (t, v) { return {}.toString.call(v) === '[object ' + t + ']' };
-var own$2 = function (o, k) { return {}.hasOwnProperty.call(o, k) };
+var own$1 = function (o, k) { return {}.hasOwnProperty.call(o, k) };
 
 function isIterable$1 (v) {
   return is('Object', v) || is('Array', v) || is('Map', v)
@@ -3437,7 +3364,7 @@ function deepIt (a, b, callback, path) {
   path = path || [];
   if (isPrimitive(b)) { return a }
   for ( var key in b) {
-    if (!own$2(b, key)) { continue }
+    if (!own$1(b, key)) { continue }
     callback(a, b, key, path, key in a);
     if (isIterable$1(b[key]) && isIterable$1(a[key])) {
       deepIt(a[key], b[key], callback, path.concat(key));
@@ -3516,7 +3443,7 @@ function defaults$1(obj, option) {
 }
 
 var is_1 = is;
-var own_1 = own$2;
+var own_1 = own$1;
 var isIterable_1 = isIterable$1;
 var isPrimitive_1 = isPrimitive;
 var deepIt_1 = deepIt;
@@ -3547,17 +3474,16 @@ var objutil_cjs = {
 
 var css = {
   '.input': {
-    border: '1px solid red',
     position: 'relative',
-    width: 100,
     input: {
       boxSizing: 'border-box',
-      width: 60
+      width: '100%',
+      paddingRight: '15px'
     }
   },
-  '.clear, .confirm': {
+  '.clear': {
     position: 'absolute',
-    width: 20,
+    width: '15px',
     top: 0,
     right: 0,
     color: 'gray',
@@ -3566,40 +3492,71 @@ var css = {
     '&:hover':{
       color: 'black'
     }
-  },
-  '.clear': {
-    right: 20
   }
 };
 
-var m$1 = cssobjMithril_cjs$1(mithril)(cssobj_cjs$1(
+var m$1 = cssobjMithril_cjs$1(mithril$1)(cssobj_cjs$1(
   css,
   {
-    local: true,
-    plugins: [
-      cssobjPluginDefaultUnit_cjs$1()
-    ]
+    local: true
   }
 ));
 
 var mSearch = {
   controller: function controller(options) {
+    var arguments$1 = arguments;
+
     var ctrl = this;
-    ctrl.options = objutil_cjs.defaults(options, {
-      hasClear: true,
-      hasConfirm: true
+    ctrl.options = options = objutil_cjs.defaults(options, {
+      clearChar: '×',
+      outer: {},
+      input: {},
+      clear: {
+        onclick: function (e) {
+          var input = e.target.previousSibling;
+          input.value = '';
+          input.focus();
+          if(typeof options.onclear=='function'){
+            options.onclear(e);
+          }
+        }
+      }
     });
+    var oldConfig = options.input.config;
+    options.input.config = function (el, old, ctx, node) {
+      if(old) { return }
+      if(typeof oldConfig=='function') {
+        oldConfig.apply(node, arguments$1);
+      }
+      var style = el.nextSibling.style;
+      if('width' in style) {
+        el.style.paddingRight = style.width;
+      }
+    };
   },
   view: function view(ctrl) {
     var options = ctrl.options;
-    return m$1('.input', [
-      m$1('input'),
-      options.hasClear ? m$1('a.clear[href=javascript:;]', '×') : [],
-      options.hasConfirm ? m$1('a.confirm[href=javascript:;]', '✓') : []
-    ])
+    return m$1(
+      '.input',
+      options.outer,
+      [
+        m$1('input', options.input),
+        m$1('a.clear[href=javascript:;]', options.clear, options.clearChar)
+      ]
+    )
   }
 };
 
-mithril.mount(test, mSearch);
+mithril$1.mount(test, mithril$1(mSearch, {
+  outer: {
+    config: function (e, old, context, node) {console.log(this ,node);},
+    style: {width: '100px'}
+  },
+  clear: {
+    style: {width: '10px'}
+  },
+  clearChar: 'x',
+  onclear: function (v){ return console.log('content cleared'); }
+}));
 
 }());
